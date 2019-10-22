@@ -42,6 +42,32 @@
           </el-select>
         </div>
       </div>
+      <div class="formItem" v-if="uuid != ''">
+        <div class="label">入场状态：</div>
+        <div class="searchInput searchSelect">
+          <el-select v-model="attended" placeholder="请选择来宾所属">
+            <el-option
+              v-for="item in attendedselectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="formItem" v-if="uuid != ''">
+        <div class="label">分享状态：</div>
+        <div class="searchInput searchSelect">
+          <el-select v-model="hasSent" placeholder="请选择来宾所属">
+            <el-option
+              v-for="item in hasSentselectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
       <div class="formBtnGroup">
         <el-button type="primary" class="CoBtn" @click="saveForm()">保存</el-button>
         <el-button class="CoResetBtn" @click="goPrePage()">返回上一页</el-button>
@@ -61,6 +87,8 @@
         return{
           uuid : '',
           centerTitle:'',
+          attended:'',
+          hasSent:'',
           name:'',
           camp:'',
           title:'',
@@ -72,6 +100,24 @@
             }, {
               value: '女方',
               label: '女方'
+            }
+          ],
+          attendedselectOptions : [
+            {
+              value: 'true',
+              label: '已入场'
+            }, {
+              value: 'false',
+              label: '未入场'
+            }
+          ],
+          hasSentselectOptions : [
+            {
+              value: 'true',
+              label: '已分享'
+            }, {
+              value: 'false',
+              label: '未分享'
             }
           ],
           tableSelectOptions : [
@@ -127,6 +173,8 @@
           this.name = data.name;
           this.camp = data.camp;
           this.title = data.title;
+          this.attended = data.attended;
+          this.hasSent = data.hasSent;
           this.numberOFTable = data.numberOFTable;
         }else if(camp){
           this.centerTitle = '新增参会人员';
@@ -144,6 +192,8 @@
           };
           if(uuid && uuid != ''){
             data.uuid = this.uuid;
+            data.attended = this.attended;
+            data.hasSent = this.hasSent;
             ADMIN.updateGuest(data)
               .then(res => {
                 console.log('res',res);
