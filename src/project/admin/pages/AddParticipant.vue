@@ -1,7 +1,7 @@
 <template>
   <div style="overflow: auto">
     <div class="centerTitle">
-      新增参会人员
+       {{centerTitle}}
     </div>
     <div class="formCon">
       <div class="formItem">
@@ -13,7 +13,7 @@
       <div class="formItem">
         <div class="label">来宾所属：</div>
         <div class="searchInput searchSelect">
-          <el-select v-model="camp" placeholder="请选择来宾所属"  :disabled="true">
+          <el-select v-model="camp" placeholder="请选择来宾所属">
             <el-option
               v-for="item in selectOptions"
               :key="item.value"
@@ -59,6 +59,8 @@
       name: "AddParticipant",
       data(){
         return{
+          uuid : '',
+          centerTitle:'',
           name:'',
           camp:'',
           title:'',
@@ -118,27 +120,54 @@
       },
       created(){
         let camp = this.$route.query.camp;
-        this.camp = camp;
+        let data = this.$route.query.data;
+        if(data){
+          this.centerTitle = '编辑参会人员';
+          this.uuid = data.uuid;
+          this.name = data.name;
+          this.camp = data.camp;
+          this.title = data.title;
+          this.numberOFTable = data.numberOFTable;
+        }else if(camp){
+          this.centerTitle = '新增参会人员';
+          this.camp = camp;
+        }
       },
       methods:{
         saveForm(){
+          let uuid = this.uuid;
           let data={
             'name':this.name,
             'camp':this.camp,
             'title':this.title,
             'numberOFTable':this.numberOFTable
           };
-          ADMIN.addGuest(data)
-            .then(res => {
-              console.log('res',res);
-              if(res.code === "0"){
-                this.$message({
-                  type: 'success',
-                  message: '操作成功'
-                });
-                this.goPrePage();
-              }
-            });
+          if(uuid && uuid != ''){
+            data.uuid = this.uuid;
+            ADMIN.updateGuest(data)
+              .then(res => {
+                console.log('res',res);
+                if(res.code === "0"){
+                  this.$message({
+                    type: 'success',
+                    message: '操作成功'
+                  });
+                  this.goPrePage();
+                }
+              });
+          }else{
+            ADMIN.addGuest(data)
+              .then(res => {
+                console.log('res',res);
+                if(res.code === "0"){
+                  this.$message({
+                    type: 'success',
+                    message: '操作成功'
+                  });
+                  this.goPrePage();
+                }
+              });
+          }
         }
       }
     }

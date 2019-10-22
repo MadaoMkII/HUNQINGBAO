@@ -32,7 +32,11 @@ const api = {
   //修改人数和男女方
   setTable(data){
     return MUtil.request('/setTable',data)
-  }
+  },
+  //编辑参会人员信息
+  updateGuest(data){
+    return MUtil.request('/updateGuest',data)
+  },
 
 };
 

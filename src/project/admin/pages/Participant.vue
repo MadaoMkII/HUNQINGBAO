@@ -84,6 +84,10 @@
 
           <el-table-column slot="table_oper" align="center" label="操作" width="200" :resizable="false" fixed="right">
             <template slot-scope="scope">
+              <div class="tableBtn" @click="editPop(scope.row)">
+                <el-button type="text">编辑</el-button>
+              </div>
+              <el-divider direction="vertical"></el-divider>
               <div class="tableBtn">
                 <el-popover trigger="hover" placement="top">
                   <div>
@@ -252,6 +256,14 @@
             name:'AddParticipant',
             query:{
               'camp':camp
+            }
+          })
+        },
+        editPop(data){
+          this.$router.push({
+            name:'AddParticipant',
+            query:{
+              'data':data
             }
           })
         }
